@@ -22,6 +22,7 @@
         <table class="table table-bordered table-striped">
             <thead class="thead-dark">
                 <tr>
+                    <th>Avatar</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Actions</th>
@@ -30,12 +31,23 @@
             <tbody>
                 @foreach ($users as $user)
                 <tr>
+                    <!-- Avatar Image -->
+                    <td>
+                        @if($user->avatar)
+                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="User  Avatar" width="50" height="50" class="rounded-circle">
+                        @else
+                            <img src="{{ asset('images/default-avatar.png') }}" alt="Default Avatar" width="50" height="50" class="rounded-circle">
+                        @endif
+                    </td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
                         <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $user->id }}" data-name="{{ $user->name }}">Delete</button>
+                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                        data-userid="{{ $user->id }}">
+                        Delete
+                    </button>
                     </td>
                 </tr>
                 @endforeach
@@ -43,44 +55,41 @@
         </table>
     </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
-
+{{-- Delete Confirmation Modal --}}
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete <strong id="userName"></strong>?
+                Are you sure you want to delete this user?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <form id="deleteForm" action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
-                    @csrf @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                <form id="deleteForm" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </form>
             </div>
         </div>
     </div>
 </div>
 
-@section('scripts')
+{{-- JavaScript to Handle Modal --}}
 <script>
-    const deleteModal = document.getElementById('deleteModal');
-    deleteModal.addEventListener('show.bs.modal', function (event) {
-        const button = event.relatedTarget; // Button that triggered the modal
-        const userId = button.getAttribute('data-id'); // Extract info from data-* attributes
-        const userName = button.getAttribute('data-name');
+    document.addEventListener('DOMContentLoaded', function () {
+        var deleteModal = document.getElementById('deleteModal');
+        deleteModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget; // Button that triggered the modal
+            var userId = button.getAttribute('data-userid'); // Extract user ID
 
-        // Update the modal's content
-        const modalBodyInput = deleteModal.querySelector('#userName');
-        const deleteForm = deleteModal.querySelector('#deleteForm');
-
-        modalBodyInput.textContent = userName;
-        deleteForm.action = `/users/${userId}`; // Set the action to the delete route
+            var form = document.getElementById('deleteForm');
+            form.action = '/users/' + userId; // Update form action dynamically
+        });
     });
 </script>
+
 @endsection
