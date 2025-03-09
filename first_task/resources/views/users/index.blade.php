@@ -35,10 +35,7 @@
                     <td>
                         <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                        </form>
+                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="{{ $user->id }}" data-name="{{ $user->name }}">Delete</button>
                     </td>
                 </tr>
                 @endforeach
@@ -46,4 +43,44 @@
         </table>
     </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong id="userName"></strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteForm" action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section('scripts')
+<script>
+    const deleteModal = document.getElementById('deleteModal');
+    deleteModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget; // Button that triggered the modal
+        const userId = button.getAttribute('data-id'); // Extract info from data-* attributes
+        const userName = button.getAttribute('data-name');
+
+        // Update the modal's content
+        const modalBodyInput = deleteModal.querySelector('#userName');
+        const deleteForm = deleteModal.querySelector('#deleteForm');
+
+        modalBodyInput.textContent = userName;
+        deleteForm.action = `/users/${userId}`; // Set the action to the delete route
+    });
+</script>
 @endsection
