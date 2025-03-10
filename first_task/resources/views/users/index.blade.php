@@ -34,7 +34,7 @@
                     <!-- Avatar Image -->
                     <td>
                         @if($user->avatar)
-                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="User  Avatar" width="50" height="50" class="rounded-circle">
+                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="User Avatar" width="50" height="50" class="rounded-circle">
                         @else
                             <img src="{{ asset('images/default-avatar.png') }}" alt="Default Avatar" width="50" height="50" class="rounded-circle">
                         @endif
@@ -54,7 +54,13 @@
             </tbody>
         </table>
     </div>
+
+    <!-- Pagination Links -->
+    <div class="d-flex justify-content-center">
+        {{ $users->links() }}
+    </div>
 </div>
+
 {{-- Delete Confirmation Modal --}}
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">

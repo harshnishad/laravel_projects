@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // Display a list of users
+    // Display a paginated list of users
     public function index()
     {
-        $users = User::all();
+        $users = User::paginate(10); // Adjust the number to however many users you want per page
         return view('users.index', compact('users'));
     }
 
@@ -97,7 +97,7 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
-
+    
     // Remove the specified user from the database
     public function destroy($id)
     {
