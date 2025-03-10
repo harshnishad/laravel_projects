@@ -11,7 +11,20 @@
 
     <!-- Title Section -->
     <h2 class="text-center mb-4">Users List</h2>
-    
+
+    <!-- Search Form -->
+    <form class="d-flex mb-4" method="GET" action="{{ route('users.index') }}">
+        <input class="form-control me-2" type="search" name="search" placeholder="Search by name" value="{{ request('search') }}">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+
+    <!-- Sort By Name Form -->
+    <div class="mb-4">
+        <a href="{{ route('users.index', ['sort_by' => 'name', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc', 'search' => request('search')]) }}" class="btn btn-info btn-sm">
+            Sort by Name ({{ request('sort_order') === 'asc' ? 'Ascending' : 'Descending' }})
+        </a>
+    </div>
+
     <!-- Create User Button -->
     <div class="text-end mb-4">
         <a href="{{ route('users.create') }}" class="btn btn-success btn-lg">Create User</a>

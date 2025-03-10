@@ -9,10 +9,26 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    // Display a paginated list of users
-    public function index()
+    // Display a paginated list of users with search and sorting functionality
+    public function index(Request $request)
     {
-        $users = User::paginate(10); // Adjust the number to however many users you want per page
+        // Start a new query for users
+        $query = User::query();
+
+        // Search functionality: Check if there is a 'search' query in the request
+        if ($request->has('search') && $request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        // Sort functionality: Check if there is a 'sort' query in the request and apply sorting
+        if ($request->has('sort_by') && $request->sort_by) {
+            $sortOrder = $request->get('sort_order', 'asc'); // Default to ascending
+            $query->orderBy($request->sort_by, $sortOrder);
+        }
+
+        // Paginate the result
+        $users = $query->paginate(10);
+
         return view('users.index', compact('users'));
     }
 
@@ -97,7 +113,7 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
-    
+
     // Remove the specified user from the database
     public function destroy($id)
     {
