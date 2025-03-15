@@ -27,36 +27,52 @@
         @csrf
         @method('PUT')
 
-        <!-- Name Input Field -->
-        <div class="mb-3">
-            <label>Name</label>
-            <input type="text" class="form-control" name="name" value="{{ old('name', $user->name) }}" required>
-        </div>
-
-        <!-- Email Input Field -->
-        <div class="mb-3">
-            <label>Email</label>
-            <input type="email" class="form-control" name="email" value="{{ old('email', $user->email) }}" required>
-        </div>
-
-        <!-- Avatar Upload Field -->
-        <div class="mb-3">
-            <label>Avatar</label>
-            <input type="file" class="form-control" name="avatar" accept="image/*">
-            
-            <!-- Display current avatar -->
-            @if($user->avatar)
-                <div class="mt-2">
-                    <img src="{{ asset('storage/' . $user->avatar) }}" alt="Current Avatar" width="100" height="100" class="rounded-circle">
-                    <p class="mt-2">Current Avatar</p>
+        <div class="row mb-3">
+            <!-- Name Input Field -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" required placeholder="Enter your name">
                 </div>
-            @else
-                <p class="mt-2">No avatar set</p>
-            @endif
+            </div>
+
+            <!-- Phone Input Field -->
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="phone">Phone No</label>
+                    <input type="text" name="phone" class="form-control" id="phone" value="{{ old('phone', $user->phone) }}" required pattern="[0-9]{10}" maxlength="10" placeholder="Enter your phone number">
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <!-- Email Input Field -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required placeholder="Enter your email">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <!-- Avatar Upload Field -->
+            <div class="form-group">
+                <label for="avatar">Avatar</label>
+                <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
+                
+                <!-- Display current avatar -->
+                @if($user->avatar)
+                    <div class="mt-2">
+                        <img src="{{ asset('storage/' . $user->avatar) }}" alt="Current Avatar" width="100" height="100" class="rounded-circle">
+                        <p class="mt-2">Current Avatar</p>
+                    </div>
+                @else
+                    <p class="mt-2">No avatar set</p>
+                @endif
+            </div>
         </div>
 
         <!-- Update Button -->
-        <button type="submit" class="btn btn-primary">Update</button>
+        <button type="submit" class="btn btn-primary btn-lg">Update</button>
     </form>
 </div>
 @endsection

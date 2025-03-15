@@ -26,6 +26,8 @@
     <div class="text-center mb-4">
         <p><strong>Name:</strong> {{ $user->name }}</p>
         <p><strong>Email:</strong> {{ $user->email }}</p>
+        <p><strong>Phone No:</strong> {{ $user->phone }}</p>
+        
     </div>
 
     <!-- Action Buttons -->

@@ -38,6 +38,7 @@
                     <th>Avatar</th>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Phone No</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -54,6 +55,7 @@
                     </td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
+                    <td>{{ $user->phone }}</td>
                     <td>
                         <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
