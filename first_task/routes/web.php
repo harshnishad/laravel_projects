@@ -1,27 +1,29 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\TaskController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\HelloController;
 
+// Default Route
 Route::get('/', function () {
     return view('welcome');
 });
 
-
-use App\Http\Controllers\HelloController;
-
+// HelloController Route
 Route::get('/hello', [HelloController::class, 'index']);
 
-use App\Http\Controllers\UserController;
-
+// User Management Routes
 Route::resource('users', UserController::class);
 
+// Project Management Routes
+Route::resource('projects', ProjectController::class);
 
-
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
-Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-Route::post('/users', [UserController::class, 'store'])->name('users.store');
-
-Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-
+// Task Management Routes (Nested under Projects) (club the routes)
+Route::get('projects/{project}/tasks/create', [TaskController::class, 'create'])->name('tasks.create'); // Show Create Task Form
+Route::post('projects/{project}/tasks', [TaskController::class, 'store'])->name('tasks.store'); // Store New Task
+Route::get('tasks/{task}', [TaskController::class, 'show'])->name('tasks.show'); // Show Single Task
+Route::get('tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit'); // Show Edit Task Form
+Route::patch('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update'); // Update Task
+Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy'); // Delete Task
