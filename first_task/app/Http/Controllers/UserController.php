@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
@@ -32,63 +33,46 @@ class UserController extends Controller
         return view('users.create');
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|min:3|max:255|regex:/^[A-Za-z_ ]+$/',
-            'email' => 'required|email|unique:users,email',
-            'phone' => 'required|digits:10|unique:users,phone',
-            'password' => 'required|min:6|confirmed',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-    
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,  // Ensure phone is saved
+            'phone' => $request->phone,
             'password' => Hash::make($request->password),
         ]);
-    
+
         if ($request->hasFile('avatar')) {
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $avatarPath;
             $user->save();
         }
-    
+
         return redirect()->route('users.index')->with('success', 'User created successfully!');
     }
-    
-    public function show($id)
+
+    public function show(User $user)
     {
-        $user = User::findOrFail($id);
         return view('users.show', compact('user'));
     }
 
-    public function edit($id)
+    public function edit(User $user)
     {
-        $user = User::findOrFail($id);
         return view('users.edit', compact('user'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, User $user)
     {
-        $request->validate([
-            'name' => 'required|string|min:3|max:255|regex:/^[A-Za-z_ ]+$/',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'phone' => 'required|digits:10|unique:users,phone,' . $id,
-            'password' => 'nullable|min:6|confirmed',
-            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
         ]);
-    
-        $user = User::findOrFail($id);
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->phone = $request->phone; // Ensure phone is updated
-    
+
         if ($request->filled('password')) {
             $user->password = Hash::make($request->password);
         }
-    
+
         if ($request->hasFile('avatar')) {
             if ($user->avatar) {
                 Storage::disk('public')->delete($user->avatar);
@@ -96,16 +80,14 @@ class UserController extends Controller
             $avatarPath = $request->file('avatar')->store('avatars', 'public');
             $user->avatar = $avatarPath;
         }
-    
+
         $user->save();
-    
+
         return redirect()->route('users.index')->with('success', 'User updated successfully!');
     }
-    
-    public function destroy($id)
-    {
-        $user = User::findOrFail($id);
 
+    public function destroy(User $user)
+    {
         if ($user->avatar) {
             Storage::disk('public')->delete($user->avatar);
         }

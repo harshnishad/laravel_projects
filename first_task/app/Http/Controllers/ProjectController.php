@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProjectRequest;
 
 class ProjectController extends Controller {
     public function index() {
@@ -20,13 +20,8 @@ class ProjectController extends Controller {
         return view('projects.create');
     }
 
-    public function store(Request $request) {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
-        //helper function 
-        Project::create($request->all());
+    public function store(ProjectRequest $request) {
+        Project::create($request->validated());
 
         return redirect()->route('projects.index')->with('success', 'Project created successfully.');
     }
@@ -35,14 +30,8 @@ class ProjectController extends Controller {
         return view('projects.edit', compact('project'));
     }
 
-    public function update(Request $request, Project $project) {
-        //seprate file for req
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-        ]);
-
-        $project->update($request->all());
+    public function update(ProjectRequest $request, Project $project) {
+        $project->update($request->validated());
 
         return redirect()->route('projects.index')->with('success', 'Project updated successfully.');
     }

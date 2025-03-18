@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\Project;
+use App\Http\Requests\TaskRequest; 
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -19,14 +20,8 @@ class TaskController extends Controller
     /**
      * Store a newly created task in the database.
      */
-    public function store(Request $request, Project $project)
+    public function store(TaskRequest $request, Project $project)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:Pending,In Progress,Completed',
-        ]);
-
         $task = new Task([
             'title' => $request->title,
             'description' => $request->description,
@@ -57,14 +52,8 @@ class TaskController extends Controller
     /**
      * Update the specified task in the database.
      */
-    public function update(Request $request, Task $task)
+    public function update(StoreTaskRequest $request, Task $task)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'status' => 'required|in:Pending,In Progress,Completed',
-        ]);
-
         $task->update([
             'title' => $request->title,
             'description' => $request->description,
