@@ -7,12 +7,13 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Project; 
 
 class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::query();
+        $query = User::with('project'); // Eager load project relationship
 
         if ($request->has('search') && $request->search) {
             $query->where('name', 'like', '%' . $request->search . '%');
@@ -30,7 +31,8 @@ class UserController extends Controller
 
     public function create()
     {
-        return view('users.create');
+        $projects = Project::all();
+        return view('users.create', compact('projects'));
     }
 
     public function store(UserRequest $request)
@@ -40,6 +42,7 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'project_id' => $request->project_id, // Assign project ID
         ]);
 
         if ($request->hasFile('avatar')) {
@@ -58,7 +61,8 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('users.edit', compact('user'));
+        $projects = Project::all(); 
+        return view('users.edit', compact('user', 'projects'));
     }
 
     public function update(UserRequest $request, User $user)
@@ -67,6 +71,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
+            'project_id' => $request->project_id, // Update project ID
         ]);
 
         if ($request->filled('password')) {

@@ -27,7 +27,17 @@
         <p><strong>Name:</strong> {{ $user->name }}</p>
         <p><strong>Email:</strong> {{ $user->email }}</p>
         <p><strong>Phone No:</strong> {{ $user->phone }}</p>
-        
+
+        <!-- Project Section -->
+        <p><strong>Project:</strong> 
+            @if($user->project)
+                <a href="{{ route('projects.show', $user->project->id) }}" class="btn btn-primary btn-sm">
+                    {{ $user->project->name }}
+                </a>
+            @else
+                <span class="text-danger">No Project Assigned</span>
+            @endif
+        </p>
     </div>
 
     <!-- Action Buttons -->
@@ -39,59 +49,59 @@
 @endsection
 
 @section('styles')
-    <style>
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-        h2 {
-            color: #2c3e50;
-            font-weight: bold;
-        }
+    h2 {
+        color: #2c3e50;
+        font-weight: bold;
+    }
 
-        .avatar-container {
-            margin-bottom: 20px;
-        }
+    .avatar-container {
+        margin-bottom: 20px;
+    }
 
-        .user-info p {
-            font-size: 1.2rem;
-            color: #555;
-        }
+    .user-info p {
+        font-size: 1.2rem;
+        color: #555;
+    }
 
-        .user-info strong {
-            color: #333;
-        }
+    .user-info strong {
+        color: #333;
+    }
 
-        .btn-lg {
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin: 0 10px;
-        }
+    .btn-lg {
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: 5px;
+        margin: 0 10px;
+    }
 
-        .btn-warning {
-            background-color: #ffc107;
-            border-color: #ffc107;
-        }
+    .btn-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+    }
 
-        .btn-warning:hover {
-            background-color: #e0a800;
-            border-color: #e0a800;
-        }
+    .btn-warning:hover {
+        background-color: #e0a800;
+        border-color: #e0a800;
+    }
 
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-        }
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
 
-        .btn-secondary:hover {
-            background-color: #5a6268;
-            border-color: #545b62;
-        }
-    </style>
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+</style>
 @endsection

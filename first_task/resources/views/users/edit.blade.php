@@ -32,7 +32,8 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" value="{{ old('name', $user->name) }}" required placeholder="Enter your name">
+                    <input type="text" class="form-control" id="name" name="name" 
+                           value="{{ old('name', $user->name) }}" required placeholder="Enter your name">
                 </div>
             </div>
 
@@ -40,7 +41,9 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="phone">Phone No</label>
-                    <input type="text" name="phone" class="form-control" id="phone" value="{{ old('phone', $user->phone) }}" required pattern="[0-9]{10}" maxlength="10" placeholder="Enter your phone number">
+                    <input type="text" name="phone" class="form-control" id="phone" 
+                           value="{{ old('phone', $user->phone) }}" pattern="[0-9]{10}" maxlength="10" 
+                           placeholder="Enter your phone number">
                 </div>
             </div>
         </div>
@@ -49,7 +52,8 @@
             <!-- Email Input Field -->
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" name="email" value="{{ old('email', $user->email) }}" required placeholder="Enter your email">
+                <input type="email" class="form-control" id="email" name="email" 
+                       value="{{ old('email', $user->email) }}" required placeholder="Enter your email">
             </div>
         </div>
 
@@ -58,11 +62,12 @@
             <div class="form-group">
                 <label for="avatar">Avatar</label>
                 <input type="file" class="form-control" id="avatar" name="avatar" accept="image/*">
-                
+
                 <!-- Display current avatar -->
                 @if($user->avatar)
                     <div class="mt-2">
-                        <img src="{{ asset('storage/' . $user->avatar) }}" alt="Current Avatar" width="100" height="100" class="rounded-circle">
+                        <img src="{{ asset('storage/' . $user->avatar) }}" 
+                             alt="Current Avatar" width="100" height="100" class="rounded-circle">
                         <p class="mt-2">Current Avatar</p>
                     </div>
                 @else
@@ -70,6 +75,25 @@
                 @endif
             </div>
         </div>
+
+        <!-- Check if projects exist before displaying dropdown -->
+        @if(isset($projects) && count($projects) > 0)
+            <div class="mb-3">
+                <!-- Project Selection Dropdown -->
+                <div class="form-group">
+                    <label for="project_id">Project</label>
+                    <select name="project_id" id="project_id" class="form-control">
+                        <option value="">Select a project</option>
+                        @foreach($projects as $project)
+                            <option value="{{ $project->id }}" 
+                                {{ (old('project_id', $user->project_id) == $project->id) ? 'selected' : '' }}>
+                                {{ $project->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        @endif
 
         <!-- Update Button -->
         <button type="submit" class="btn btn-primary btn-lg">Update</button>
