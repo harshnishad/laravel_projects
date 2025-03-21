@@ -20,7 +20,7 @@ Route::resource('users', UserController::class);
 // Project Management Routes
 Route::resource('projects', ProjectController::class);
 
-// Task Management Routes (Nested under Projects) (club the routes)
+
 Route::get('projects/{project}/tasks/create', [TaskController::class, 'create'])->name('tasks.create'); // Show Create Task Form
 Route::post('projects/{project}/tasks', [TaskController::class, 'store'])->name('tasks.store'); // Store New Task
 Route::get('tasks/{task}', [TaskController::class, 'show'])->name('tasks.show'); // Show Single Task

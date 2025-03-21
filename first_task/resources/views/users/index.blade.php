@@ -3,68 +3,56 @@
 @section('title', 'Users List')
 
 @section('content')
-<div class="container my-5">
+<div class="container my-5 shadow-lg p-4 rounded bg-white">
     <!-- Success message alert -->
     @if (session('success'))
         <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
     <!-- Title Section -->
-    <h2 class="text-center mb-4">Users List</h2>
+    <h2 class="text-center mb-4 text-primary">Users List</h2>
 
     <!-- Search Form -->
     <form class="d-flex mb-4" method="GET" action="{{ route('users.index') }}">
-        <input class="form-control me-2" type="search" name="search" placeholder="Search by name" value="{{ request('search') }}">
-        <button class="btn btn-primary" type="submit">Search</button>
+        <input class="form-control me-2" type="search" name="search" placeholder="Search by name, email, or phone (up to 3 words)" value="{{ request('search') }}">
+        <button class="btn btn-outline-primary" type="submit">Search</button>
     </form>
 
-    <!-- Sort By Name Form -->
-    <div class="mb-4">
-        <a href="{{ route('users.index', ['sort_by' => 'name', 'sort_order' => request('sort_order') === 'asc' ? 'desc' : 'asc', 'search' => request('search')]) }}" class="btn btn-info btn-sm">
-            Sort by Name ({{ request('sort_order') === 'asc' ? 'Ascending' : 'Descending' }})
-        </a>
-    </div>
-
     <!-- Create User Button -->
-    <div class="text-end mb-4">
-        <a href="{{ route('users.create') }}" class="btn btn-success btn-lg">Create User</a>
+    <div class="mb-4 text-end">
+        <a href="{{ route('users.create') }}" class="btn btn-success">+ Create User</a>
     </div>
 
     <!-- Users Table -->
     <div class="table-responsive">
-        <table class="table table-bordered table-striped">
-            <thead class="thead-dark">
+        <table class="table table-hover table-bordered">
+            <thead class="table-dark">
                 <tr>
                     <th>Avatar</th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone No</th>
+                    
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($users as $user)
                 <tr>
-                    <!-- Avatar Image -->
                     <td>
-                        @if($user->avatar)
-                            <img src="{{ asset('storage/' . $user->avatar) }}" alt="User Avatar" width="50" height="50" class="rounded-circle">
-                        @else
-                            <img src="{{ asset('images/default-avatar.png') }}" alt="Default Avatar" width="50" height="50" class="rounded-circle">
-                        @endif
+                        <img src="{{ $user->avatar ? asset('storage/' . $user->avatar) : asset('images/default-avatar.png') }}" 
+                            alt="User Avatar" class="rounded-circle" width="50" height="50">
                     </td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->phone }}</td>
-                    <td>{{ $user->project ? $user->project->name : 'No Project' }}</td>
                     
                     <td>
                         <a href="{{ route('users.show', $user->id) }}" class="btn btn-info btn-sm">View</a>
                         <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal"
-                        data-userid="{{ $user->id }}">
-                        Delete
-                    </button>
+                        <button class="btn btn-danger btn-sm delete-btn" data-bs-toggle="modal" data-bs-target="#deleteModal" data-userid="{{ $user->id }}">
+                            Delete
+                        </button>
                     </td>
                 </tr>
                 @endforeach
@@ -72,13 +60,13 @@
         </table>
     </div>
 
-    <!-- Pagination Links -->
+    <!-- Pagination -->
     <div class="d-flex justify-content-center">
         {{ $users->links() }}
     </div>
 </div>
 
-{{-- Delete Confirmation Modal --}}
+<!-- Delete Confirmation Modal -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -101,18 +89,18 @@
     </div>
 </div>
 
-{{-- JavaScript to Handle Modal --}}
+<!-- JavaScript to Handle Modal -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var deleteModal = document.getElementById('deleteModal');
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget; // Button that triggered the modal
-            var userId = button.getAttribute('data-userid'); // Extract user ID
 
-            var form = document.getElementById('deleteForm');
-            form.action = '/users/' + userId; // Update form action dynamically
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', function () {
+                var userId = this.getAttribute('data-userid');
+                var form = document.getElementById('deleteForm');
+                form.action = '/users/' + userId;
+            });
         });
     });
 </script>
-
 @endsection

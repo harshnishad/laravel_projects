@@ -52,7 +52,7 @@ class TaskController extends Controller
     /**
      * Update the specified task in the database.
      */
-    public function update(StoreTaskRequest $request, Task $task)
+    public function update(TaskRequest $request, Task $task)
     {
         $task->update([
             'title' => $request->title,

@@ -78,21 +78,21 @@
 
         <!-- Check if projects exist before displaying dropdown -->
         @if(isset($projects) && count($projects) > 0)
+            <!-- Project Multi-Select Dropdown -->
             <div class="mb-3">
-                <!-- Project Selection Dropdown -->
                 <div class="form-group">
-                    <label for="project_id">Project</label>
-                    <select name="project_id" id="project_id" class="form-control">
-                        <option value="">Select a project</option>
+                    <label for="project_ids">Projects</label>
+                    <select name="project_ids[]" id="project_ids" class="form-control" multiple>
                         @foreach($projects as $project)
                             <option value="{{ $project->id }}" 
-                                {{ (old('project_id', $user->project_id) == $project->id) ? 'selected' : '' }}>
+                                {{ in_array($project->id, old('project_ids', $user->projects->pluck('id')->toArray())) ? 'selected' : '' }}>
                                 {{ $project->name }}
                             </option>
                         @endforeach
                     </select>
                 </div>
             </div>
+
         @endif
 
         <!-- Update Button -->

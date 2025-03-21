@@ -15,8 +15,8 @@ class User extends Authenticatable
     ];
 
     // Define the relationship
-    public function project()
+    public function projects()
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsToMany(Project::class);
     }
 }
